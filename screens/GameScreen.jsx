@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, Text, View, Alert } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
 import Title from '../components/ui/Title';
 import NumberContainer from '../components/game/NumberContainer';
 import PrimaryButton from '../components/ui/PrimaryButton';
@@ -14,18 +14,45 @@ function generateRandomBetween(min, max, exclude) {
   }
 }
 
-const LOWER_BOUND = 1;
-const UPPER_BOUND = 100;
+let minBoundary = 1;
+let maxBoundary = 100;
 
-const GameScreen = ({ userNumber }) => {
-  const initialGuess = generateRandomBetween(
-    LOWER_BOUND,
-    UPPER_BOUND,
-    userNumber
+const GameScreen = ({ userNumber, onGameOver }) => {
+  const initialGuess = useMemo(
+    () => generateRandomBetween(minBoundary, maxBoundary, userNumber),
+    [minBoundary, maxBoundary, userNumber]
   );
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
-  
-    function nextGuessHandler() {}
+
+  useEffect(() => {
+    if (currentGuess === userNumber) {
+      onGameOver();
+    }
+  }, [currentGuess, userNumber, onGameOver]);
+
+  function nextGuessHandler(direction) {
+    if (
+      (direction === 'lower' && currentGuess < userNumber) ||
+      (direction === 'greater' && currentGuess > userNumber)
+    ) {
+      Alert.alert('Please be honest!', 'Choose the correct direction', {
+        text: 'Sorry',
+        style: 'cancel',
+      });
+      return;
+    }
+    if (direction === 'lower') {
+      maxBoundary = currentGuess;
+    } else {
+      minBoundary = currentGuess + 1;
+    }
+    const newRndNumber = generateRandomBetween(
+      minBoundary,
+      maxBoundary,
+      currentGuess
+    );
+    setCurrentGuess(newRndNumber);
+  }
 
   return (
     <View style={styles.screen}>
@@ -35,8 +62,14 @@ const GameScreen = ({ userNumber }) => {
       <View>
         <Text>Higher or Lower</Text>
         <View>
-          <PrimaryButton onPress={}> + </PrimaryButton>
-          <PrimaryButton onPress={}> - </PrimaryButton>
+          <PrimaryButton onPress={() => nextGuessHandler('lower')}>
+            {' '}
+            -{' '}
+          </PrimaryButton>
+          <PrimaryButton onPress={() => nextGuessHandler('greater')}>
+            {' '}
+            +{' '}
+          </PrimaryButton>
         </View>
       </View>
       <View>
