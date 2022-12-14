@@ -6,6 +6,7 @@ import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import { useState } from 'react';
 import Colors from './constants/colors';
+import { useFonts } from 'expo-font';
 
 const bg_gradient = [Colors.primary700, Colors.secondary500];
 
