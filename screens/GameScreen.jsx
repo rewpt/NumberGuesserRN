@@ -10,7 +10,6 @@ import GuessLogItem from '../components/game/GuessLogItem';
 
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
-  console.log(min, max, rndNum, exclude);
   if (rndNum === exclude) {
     return generateRandomBetween(min, max, exclude);
   } else {
@@ -22,11 +21,7 @@ let minBoundary = 1;
 let maxBoundary = 100;
 
 const GameScreen = ({ userNumber, onGameOver }) => {
-  const initialGuess = generateRandomBetween(
-    minBoundary,
-    maxBoundary,
-    userNumber
-  );
+  const initialGuess = generateRandomBetween(1, 100, userNumber);
 
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [guessRounds, setGuessRounds] = useState([initialGuess]);
@@ -47,10 +42,12 @@ const GameScreen = ({ userNumber, onGameOver }) => {
       (direction === 'lower' && currentGuess < userNumber) ||
       (direction === 'greater' && currentGuess > userNumber)
     ) {
-      Alert.alert('Please be honest!', 'Choose the correct direction', {
-        text: 'Sorry',
-        style: 'cancel',
-      });
+      Alert.alert('Please be honest!', 'Choose the correct direction', [
+        {
+          text: 'Sorry',
+          style: 'cancel',
+        },
+      ]);
       return;
     }
     if (direction === 'lower') {

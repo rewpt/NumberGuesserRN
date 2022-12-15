@@ -7,7 +7,7 @@ import PrimaryButton from '../components/ui/PrimaryButton';
 const GameOverScreen = ({ roundsNumber, userNumber, onStartNewGame }) => {
   return (
     <View style={styles.rootContainer}>
-      <Title>Game Over!</Title>
+      <Title>Number Guessed!</Title>
       <View style={styles.imageContainer}>
         <Image
           style={styles.image}
